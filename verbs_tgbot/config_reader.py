@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     verb_challenge_users_file: Path = BASE_DIR.parent / 'users_verb_challenge.json'
     
 
-    model_config = SettingsConfigDict(env_file='.env', env_file_encoding='utf-8')
+    model_config = SettingsConfigDict(env_file=BASE_DIR.parent/ '.env', env_file_encoding='utf-8')
 
 
 config = Settings() # type: ignore
