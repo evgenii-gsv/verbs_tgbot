@@ -13,8 +13,8 @@ async def add_user_to_verbs_challenge(message: types.Message):
     """A handler to add user to verbs challenge"""
     
     if message.from_user:
-        time_of_challenge = str(config.verbs_challenge_hour) + ':' + \
-        str(config.verbs_challenge_minute)
+        time_of_challenge = str(config.verbs_challenge_hour).rjust(2, '0') + ':' + \
+        str(config.verbs_challenge_minute).rjust(2, '0')
 
         user, added = add_user_to_file(
             message.from_user.model_dump()

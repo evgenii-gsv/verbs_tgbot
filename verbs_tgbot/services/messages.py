@@ -37,3 +37,5 @@ Please try again and write the correct second form of these verbs:
 WELCOME_VERBS_CHALLENGE = "Hello, {name}! Welcome to the irregular verbs challange. You will receive {verbs_quantity} verbs once a day at {time}."
 
 SECOND_WELCOME_VERBS_CHALLENGE = "You have already started the challenge! You will receive your verbs at {time}."
+
+PING_RESPONSE = "I'm alive!"
