@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "verbs-tgbot"
+version = "0.1.0"
+description = ""
+authors = ["Evgenii Gusev <ged1994@mail.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+aiogram = "^3.1.1"
+pydantic-settings = "^2.0.3"
+apscheduler = "^3.10.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
