@@ -1,19 +1,21 @@
-from dataclasses import dataclass
 from pathlib import Path
-from typing import Tuple
+from typing import ClassVar, List, Tuple, Type
 from random import sample
+from marshmallow_dataclass import dataclass
+from marshmallow import Schema
 
 from verbs_tgbot.config_reader import config
 from verbs_tgbot.services.exceptions import FileWithVerbsNotFound
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(frozen=True)
 class IrregularVerb:
     """A dataclass to store information about an irregular verb."""
     
     first_form: str
     second_form: str
     third_form: str
+    Schema: ClassVar[Type[Schema]] = Schema # type: ignore
 
     def __str__(self) -> str:
         return 'to ' + self.first_form
@@ -38,3 +40,8 @@ def get_random_verbs_from_file(verbs_quantity: int | None = None, file: Path | N
         verbs_quantity = config.verbs_quantity_per_message
     return tuple(sample(get_all_verbs_from_file(file), verbs_quantity))
 
+# lst = IrregularVerb('be', 'was', 'been'), IrregularVerb('have', 'had', 'had')
+# j = IrregularVerb.Schema().dump(lst, many=True)
+# print(j)
+# v: List[IrregularVerb] = IrregularVerb.Schema().load(j, many=True)
+# print(v[0])

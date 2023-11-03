@@ -1,6 +1,7 @@
 import asyncio
 import logging
 from aiogram import Bot, Dispatcher
+from aiogram.fsm.storage.redis import RedisStorage
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from verbs_tgbot.services.apsched import add_all_jobs
 
@@ -12,9 +13,10 @@ async def main():
     logging.basicConfig(level=logging.INFO,
                         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
+    storage = RedisStorage.from_url(str(config.redis_url))
     bot = Bot(token=config.bot_token.get_secret_value())
     scheduler = AsyncIOScheduler(timezone='Europe/Moscow')
-    dp = Dispatcher(scheduler=scheduler)
+    dp = Dispatcher(scheduler=scheduler, storage=storage)
     scheduler.start()
 
     dp.include_routers(
