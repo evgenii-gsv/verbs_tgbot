@@ -8,6 +8,7 @@ from verbs_tgbot.config_reader import config
 
 router = Router()
 
+
 @router.message(Command('start'))
 async def add_user_to_verbs_challenge(message: types.Message):
     """A handler to add user to verbs challenge"""

@@ -1,12 +1,10 @@
 from pathlib import Path
-from typing import Any, Sequence, Tuple
+from typing import List, Sequence, Tuple
 import json
 from aiogram import Bot, Dispatcher
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.storage.base import StorageKey
-from marshmallow import Schema
-
 
 from verbs_tgbot.services.exceptions import InvalidAnswer, NotSameLength
 from verbs_tgbot.services.irregular_verbs import IrregularVerb
@@ -23,21 +21,38 @@ def check_answers_and_get_response(verbs: Sequence[IrregularVerb], message: Mess
     _validate_answers_length(verbs, answers)
 
     for item in zip(verbs, answers):
-        if _check_second_form(*item):
+        second_form_correct, third_form_correct = _check_both_forms(*item)
+        if second_form_correct and third_form_correct:
             response += messages.CORRECT_VERB_ANSWER.format(
-                first_form=item[0].first_form, second_form=item[0].second_form
+                first_form=item[0].first_form, 
+                second_form=item[0].second_form, 
+                third_form=item[0].third_form
                 )
-        else:
-            response += messages.INCORRECT_VERB_ANSWER.format(
-                first_form=item[0].first_form, wrong_answer=item[1]
+        elif second_form_correct:
+            response += messages.INCORRECT_THIRD_FORM_ANSWER.format(
+                first_form=item[0].first_form,
+                wrong_answer=item[1][1]
             )
-            wrong_verbs += item[0], 
+            wrong_verbs += item[0],
+        elif third_form_correct:
+            response += messages.INCORRECT_SECOND_FORM_ANSWER.format(
+                first_form=item[0].first_form,
+                wrong_answer=item[1][0]
+            )
+            wrong_verbs += item[0],
+        else:
+            response += messages.INCORRECT_BOTH_FORMS_ANSWER.format(
+                first_form=item[0].first_form,
+                wrong_answer=' - '.join(item[1])
+            )
+            wrong_verbs += item[0],
     
     if wrong_verbs:
         response += messages.TRY_AGAIN_VERBS.format(
             wrong_verbs=('\n'.join('- ' + verb.first_form for verb in wrong_verbs))
         )
     return response, wrong_verbs
+
 
 def get_users_from_file(file: Path | None = None) -> list:
     """The function to get user from json file"""
@@ -47,6 +62,7 @@ def get_users_from_file(file: Path | None = None) -> list:
     with open(file) as f:
         users = json.load(f)
     return users
+
 
 def add_user_to_file(user: dict, file: Path | None = None) -> Tuple[dict, bool]:
     """The function to add user to a json file"""
@@ -109,10 +125,10 @@ def get_redemption_template(error_verbs_quantity: int, verbs_quantity: int, verb
     return template
             
 
-
-def _validate_answers_length(verbs: Sequence[IrregularVerb], answers: Sequence[str]) -> None:
+def _validate_answers_length(verbs: Sequence[IrregularVerb], answers: Tuple[Tuple[str, ...], ...]) -> None:
     if len(verbs) != len(answers):
         raise NotSameLength
+
 
 def _check_second_form(verb: IrregularVerb, answer: str) -> bool:
     answer = answer.lower().strip()
@@ -122,7 +138,24 @@ def _check_second_form(verb: IrregularVerb, answer: str) -> bool:
         return True
     return False
 
-def _parse_answers(message: Message) -> Tuple[str, ...]:
+
+def _check_both_forms(verb: IrregularVerb, answer: Tuple[str, ...]) -> List[bool]:
+    try: 
+        second_form_answer, third_form_answer = answer
+    except:
+        raise InvalidAnswer
+    result = [False, False]
+    if second_form_answer == verb.second_form or second_form_answer in verb.second_form.split('/'):
+        result[0] = True
+    if third_form_answer == verb.third_form or third_form_answer in verb.third_form.split('/'):
+        result[1] = True
+    return result
+
+
+def _parse_answers(message: Message) -> Tuple[Tuple[str, ...], ...]:
     if not message.text:
         raise InvalidAnswer
-    return tuple(map(str.lower, message.text.split()))
+    answers = tuple()
+    for verb in map(lambda x: x.lower().strip(), message.text.split(',')):
+        answers += (tuple(verb.split())),
+    return answers

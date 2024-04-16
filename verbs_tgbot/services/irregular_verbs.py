@@ -38,10 +38,4 @@ def get_random_verbs_from_file(verbs_quantity: int | None = None, file: Path | N
     """A function to get random verbs from the verbs file"""
     if verbs_quantity is None:
         verbs_quantity = config.verbs_quantity_per_message
-    return tuple(sample(get_all_verbs_from_file(file), verbs_quantity))
-
-# lst = IrregularVerb('be', 'was', 'been'), IrregularVerb('have', 'had', 'had')
-# j = IrregularVerb.Schema().dump(lst, many=True)
-# print(j)
-# v: List[IrregularVerb] = IrregularVerb.Schema().load(j, many=True)
-# print(v[0])
+    return tuple(sample(get_all_verbs_from_file(file)[:5], verbs_quantity))

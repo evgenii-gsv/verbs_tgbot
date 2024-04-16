@@ -1,9 +1,10 @@
 from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import SecretStr, RedisDsn, FutureDatetime
+from pydantic import SecretStr, RedisDsn
 
 
 BASE_DIR = Path(__file__).resolve().parent
+
 
 class Settings(BaseSettings):
     bot_token: SecretStr
@@ -22,4 +23,3 @@ class Settings(BaseSettings):
 
 
 config = Settings() # type: ignore
-

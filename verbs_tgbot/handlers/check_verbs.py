@@ -70,7 +70,5 @@ async def verb_forms_sent(message: types.Message, state: FSMContext, bot: Bot):
             else:
                 await state.set_state(state=None)
             
-
-
     except InvalidAnswer:
         await message.answer(text=messages.INVALID_ANSWER.format(verbs_quantity=str(len(verbs))))

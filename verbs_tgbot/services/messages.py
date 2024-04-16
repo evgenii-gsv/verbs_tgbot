@@ -6,13 +6,18 @@ class Emoji(enum.Enum):
     WRONG = '❌'
 
 
-CORRECT_VERB_ANSWER = Emoji.OK.value + " Correct: {first_form} - {second_form}\n"
+CORRECT_VERB_ANSWER = Emoji.OK.value + " Correct: {first_form} - {second_form} - {third_form}\n"
 
-INCORRECT_VERB_ANSWER = Emoji.WRONG.value + " Incorrect: the second form of the verb '{first_form}' is not '{wrong_answer}'\n"
+INCORRECT_SECOND_FORM_ANSWER = Emoji.WRONG.value + " Incorrect: the 2nd form of the verb '{first_form}' is not '{wrong_answer}'\n"
+
+INCORRECT_THIRD_FORM_ANSWER = Emoji.WRONG.value + " Incorrect: the 3rd form of the verb '{first_form}' is not '{wrong_answer}'\n"
+
+INCORRECT_BOTH_FORMS_ANSWER = Emoji.WRONG.value + " Incorrect: the 2nd and the 3rd forms of the verb '{first_form}' are not '{wrong_answer}'\n"
 
 HOW_TO = """
 
-Please write only {verbs_quantity} verbs in second form separating them with spaces."""
+Please write only the 2nd and the 3rd forms for each verb separating them with a space. Separate the forms of different verbs with a comma (,).
+For example, if you are given verbs 'to be' and 'to have', you need to write this: 'was been, had had'"""
 
 NEW_VERBS = """\
 Here are your {verbs_quantity} irregular verbs for today:
@@ -34,7 +39,7 @@ A new week of challenge has passed! You've made only {error_verbs_quantity} mist
 
 {verbs}""" + HOW_TO
 
-INVALID_ANSWER = "Something went wrong... Please try again and make sure you only write {verbs_quantity} words separating them with spaces."
+INVALID_ANSWER = "Something went wrong... Please try again and make sure you only write two forms per verb separating them with a space, separate different verbs forms with a comma."
 
 TEACHER_NOTIF_VERBS_SENT = """\
 The user @{username} just received these verbs:
@@ -52,7 +57,7 @@ Here are the results of the user @{username}
 {result}"""
 
 TRY_AGAIN_VERBS = """
-Please try again and write the correct second form of these verbs:
+Please try again and write both correct forms of these verbs:
 
 {wrong_verbs}"""
 
