@@ -38,4 +38,4 @@ def get_random_verbs_from_file(verbs_quantity: int | None = None, file: Path | N
     """A function to get random verbs from the verbs file"""
     if verbs_quantity is None:
         verbs_quantity = config.verbs_quantity_per_message
-    return tuple(sample(get_all_verbs_from_file(file)[:5], verbs_quantity))
+    return tuple(sample(get_all_verbs_from_file(file), verbs_quantity))
